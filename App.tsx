@@ -348,9 +348,12 @@ const App: React.FC = () => {
               <div className="bg-primary rounded-lg p-1.5 text-white shadow-lg shadow-primary/30">
                 <Users size={24} />
               </div>
-              <h1 className="font-display font-bold text-xl text-gray-800 tracking-tight hidden md:block">
-                LỚP HỌC TÍCH CỰC
-              </h1>
+              <div className="hidden md:block">
+                <h1 className="font-display font-bold text-xl text-gray-800 tracking-tight">
+                  LỚP HỌC TÍCH CỰC
+                </h1>
+                <p className="text-xs text-gray-500">Phát triển bởi Trần Hoài Thanh</p>
+              </div>
             </div>
 
             <div className="h-8 w-px bg-gray-200 hidden md:block"></div>
