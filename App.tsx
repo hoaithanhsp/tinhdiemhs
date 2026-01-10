@@ -464,7 +464,7 @@ const App: React.FC = () => {
 
           <label className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 text-gray-600 font-bold rounded-xl hover:bg-gray-50 transition-all cursor-pointer">
             <FileText size={18} /> Import DOCX
-            <input type="file" accept=".pdf, .docx" className="hidden" onChange={handleImport} />
+            <input type="file" accept=".docx" className="hidden" onChange={handleImport} />
           </label>
 
           <button
