@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {
   Users, Settings, Download, Plus, Search,
-  ChevronDown, Trophy, Grid, FileText, Briefcase, Trash2, CheckCircle, FolderOpen, Edit2, X, Gift
+  ChevronDown, Trophy, Grid, FileText, Briefcase, Trash2, CheckCircle, FolderOpen, Edit2, X, Gift, BarChart2
 } from 'lucide-react';
 import StudentCard from './components/StudentCard';
 import StudentDetailModal from './components/StudentDetailModal';
@@ -10,6 +10,7 @@ import { AddStudentModal } from './components/AddStudentModal';
 import { ClassSettingsModal } from './components/ClassSettingsModal';
 import { PointAdjustmentModal } from './components/PointAdjustmentModal';
 import { RewardSettingsModal } from './components/RewardSettingsModal';
+import { ClassStatisticsModal } from './components/ClassStatisticsModal';
 import { Leaderboard } from './components/Leaderboard';
 import { Student, ViewMode, Reward, LEVELS, PointHistory, RedeemedReward, ClassGroup, DEFAULT_REWARDS } from './types';
 import { calculateLevel, triggerConfetti, toExcel, parseDocument, getAvatarUrl } from './utils';
@@ -53,6 +54,7 @@ const App: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showClassManager, setShowClassManager] = useState(false);
   const [showRewardSettings, setShowRewardSettings] = useState(false);
+  const [showStatistics, setShowStatistics] = useState(false);
   const [editingClass, setEditingClass] = useState<ClassGroup | null>(null); // For ClassSettingsModal
   const [adjustmentRequest, setAdjustmentRequest] = useState<{ student: Student, amount: number } | null>(null);
 
@@ -378,6 +380,9 @@ const App: React.FC = () => {
               <span className="hidden md:block">Bảng xếp hạng</span>
             </button>
             <div className="h-6 w-px bg-gray-200 mx-1"></div>
+            <button onClick={() => setShowStatistics(true)} className="flex items-center gap-1 text-sm font-semibold text-indigo-500 hover:text-indigo-700 px-2 py-1 rounded-lg hover:bg-indigo-50">
+              <BarChart2 size={18} /> <span className="hidden md:inline">Thống kê</span>
+            </button>
             <button onClick={() => setShowRewardSettings(true)} className="flex items-center gap-1 text-sm font-semibold text-purple-500 hover:text-purple-700 px-2 py-1 rounded-lg hover:bg-purple-50">
               <Gift size={18} /> <span className="hidden md:inline">Cài đặt quà</span>
             </button>
@@ -458,7 +463,7 @@ const App: React.FC = () => {
           </button>
 
           <label className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 text-gray-600 font-bold rounded-xl hover:bg-gray-50 transition-all cursor-pointer">
-            <FileText size={18} /> Import file DOCX
+            <FileText size={18} /> Import DOCX
             <input type="file" accept=".pdf, .docx" className="hidden" onChange={handleImport} />
           </label>
 
@@ -628,6 +633,14 @@ const App: React.FC = () => {
         onClose={() => setShowRewardSettings(false)}
         rewards={rewards}
         onSaveRewards={setRewards}
+      />
+
+      {/* Class Statistics Modal */}
+      <ClassStatisticsModal
+        isOpen={showStatistics}
+        onClose={() => setShowStatistics(false)}
+        students={filteredStudents}
+        className={currentClass?.name || 'Lớp học'}
       />
 
     </div>
