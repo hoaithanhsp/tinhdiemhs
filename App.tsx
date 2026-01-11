@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {
   Users, Settings, Download, Plus, Search,
-  ChevronDown, Trophy, Grid, FileText, Briefcase, Trash2, CheckCircle, FolderOpen, Edit2, X, Gift, BarChart2
+  ChevronDown, Trophy, Grid, FileText, Briefcase, Trash2, CheckCircle, FolderOpen, Edit2, X, Gift, BarChart2, LogOut
 } from 'lucide-react';
 import StudentCard from './components/StudentCard';
 import StudentDetailModal from './components/StudentDetailModal';
@@ -11,6 +11,7 @@ import { ClassSettingsModal } from './components/ClassSettingsModal';
 import { PointAdjustmentModal } from './components/PointAdjustmentModal';
 import { RewardSettingsModal } from './components/RewardSettingsModal';
 import { ClassStatisticsModal } from './components/ClassStatisticsModal';
+import { LoginModal } from './components/LoginModal';
 import { Leaderboard } from './components/Leaderboard';
 import { Student, ViewMode, Reward, LEVELS, PointHistory, RedeemedReward, ClassGroup, DEFAULT_REWARDS } from './types';
 import { calculateLevel, triggerConfetti, toExcel, parseDocument, getAvatarUrl } from './utils';
@@ -20,6 +21,14 @@ const DEFAULT_CLASS_ID = 'default-class';
 
 const App: React.FC = () => {
   // --- State Initialization ---
+
+  // Auth State
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
+    return !!localStorage.getItem('lhtc_loggedInUser');
+  });
+  const [loggedInUser, setLoggedInUser] = useState<string>(() => {
+    return localStorage.getItem('lhtc_loggedInUser') || '';
+  });
 
   // Classes
   const [classes, setClasses] = useState<ClassGroup[]>(() => {
@@ -338,6 +347,26 @@ const App: React.FC = () => {
       }
     });
 
+  // --- Auth Handlers ---
+
+  const handleLogin = (username: string) => {
+    setIsLoggedIn(true);
+    setLoggedInUser(username);
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+      localStorage.removeItem('lhtc_loggedInUser');
+      setIsLoggedIn(false);
+      setLoggedInUser('');
+    }
+  };
+
+  // Show login modal if not logged in
+  if (!isLoggedIn) {
+    return <LoginModal onLogin={handleLogin} />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col font-sans">
       {/* Header */}
@@ -392,6 +421,13 @@ const App: React.FC = () => {
             <button onClick={() => setShowClassManager(true)} className="flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-gray-800 px-2 py-1 rounded-lg hover:bg-gray-50">
               <Settings size={18} /> <span className="hidden md:inline">Quản lý lớp</span>
             </button>
+            <div className="h-6 w-px bg-gray-200 mx-1"></div>
+            <div className="flex items-center gap-2">
+              <span className="hidden md:inline text-xs text-gray-500">Xin chào, <strong className="text-gray-700">{loggedInUser}</strong></span>
+              <button onClick={handleLogout} className="flex items-center gap-1 text-sm font-semibold text-red-500 hover:text-red-700 px-2 py-1 rounded-lg hover:bg-red-50" title="Đăng xuất">
+                <LogOut size={18} /> <span className="hidden md:inline">Đăng xuất</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
